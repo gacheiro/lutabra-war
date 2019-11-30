@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  <section class="columns is-centered">
+    <div class="column is-half-desktop">
+    {% for date, deaths in deathlist %}
+      <div class="tabs is-large">
+      <ul class>
+        <li class="is-active"><a>{{ date|format_date }}</a></li>
+      </ul>
+      </div>
+      <ul class="deathlist">
+      {% for death in deaths %}
+        {{ render_death(death) }}
+      {% endfor %}
+      </ul>
+    {% endfor %}
+    </div>
+  </section>>
+{% endblock %}
+
+{% macro render_death(death) -%}
+  {% if death.guild == config['GUILD_A'] %}
+  <li class="has-text-left"> 
+      <i class="fas fa-skull-crossbones"></i> <span class="tag is-info is-light">{{ death.level }}, {{ death.vocation }}</span> <span class="tag is-info is-light is-medium">{{ death.char_name }}</span>
+  {% else %}
+  <li class="has-text-right">
+      <span class="tag is-danger is-light is-medium">{{ death.char_name }}</span> <span class="tag is-danger is-light">{{ death.vocation }}, {{ death.level }}</span> <i class="fas fa-skull-crossbones"></i> 
+  {% endif %}
+  </li>
+{%- endmacro %}
