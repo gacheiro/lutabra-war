@@ -1,6 +1,7 @@
 
 # Sqlite db
 *.db
+*.db-journal
 
 # Vscode
 .vscode
