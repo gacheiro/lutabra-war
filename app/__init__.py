@@ -26,6 +26,7 @@ def create_db():
 
 @app.cli.command('update-db')
 def update_db():
+    print('Update start.')
     # deletes all death records
     db.session.query(Death).delete()
     # repopulates the db with new death records
@@ -36,6 +37,7 @@ def update_db():
             print(death)
         db.session.add(Death(**death))
     db.session.commit()
+    print('Update done.')
 
 
 @app.cli.command('stats-db')
