@@ -1,6 +1,32 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+  <div class="columns is-centered">
+    <div class="column is-half-desktop">
+      <div class="level">
+        <div class="level-left">
+          <div class="level-item">
+            <figure class="image is-64x64">
+              <img src="https://static.tibia.com/images/guildlogos/Almighty_Os.gif">
+            </figure>
+          </div>
+          <div class="level-item">
+            <p class="title">Almighty Os</p>
+          </div>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+            <p class="title">Skeletin Alliance</p>
+          </div>
+          <div class="level-item">
+            <figure class="image is-64x64">
+              <img src="https://static.tibia.com/images/community/default_logo.gif">
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <section class="columns is-centered">
     <div class="column is-half-desktop">
     {% for date, deaths in deathlist %}
@@ -16,16 +42,24 @@
       </ul>
     {% endfor %}
     </div>
-  </section>>
+  </section>
 {% endblock %}
 
 {% macro render_death(death) -%}
   {% if death.guild == config['GUILD_A'] %}
   <li class="has-text-left"> 
-      <i class="fas fa-skull-crossbones"></i> <span class="tag is-info is-light">{{ death.level }}, {{ death.vocation }}</span> <span class="tag is-info is-light is-medium">{{ death.char_name }}</span>
+      <i class="fas fa-skull-crossbones"></i>
+      <span class="tag is-info is-light">{{ death.level }}, {{ death.vocation }}</span>
+      <span class="tag is-info is-light is-medium">
+        <a href={{ death.char_name|url_for_char }} target="_blank">{{ death.char_name }}</a>
+      </span>
   {% else %}
   <li class="has-text-right">
-      <span class="tag is-danger is-light is-medium">{{ death.char_name }}</span> <span class="tag is-danger is-light">{{ death.vocation }}, {{ death.level }}</span> <i class="fas fa-skull-crossbones"></i> 
-  {% endif %}
+      <span class="tag is-danger is-light is-medium">
+        <a href={{ death.char_name|url_for_char }} target="_blank">{{ death.char_name }}</a>
+      </span>
+      <span class="tag is-danger is-light">{{ death.vocation }}, {{ death.level }}</span>
+      <i class="fas fa-skull-crossbones"></i> 
+  {% endif -%}
   </li>
 {%- endmacro %}

@@ -54,3 +54,9 @@ def drop_db():
 def format_date(date):
     """Formats date as: Saturday, 30 Nov"""
     return date.strftime('%A, %d %b')
+
+
+@app.template_filter('url_for_char')
+def link_for_char(char_name):
+    char_name = '+'.join(name for name in char_name.split())
+    return f'https://www.tibia.com/community/?subtopic=characters&name={char_name}'
