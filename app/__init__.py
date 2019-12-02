@@ -2,6 +2,7 @@ import os
 from itertools import groupby
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
+from jinja2 import Markup
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -53,10 +54,12 @@ def drop_db():
 @app.template_filter('format_date')
 def format_date(date):
     """Formats date as: Saturday, 30 Nov"""
-    return date.strftime('%A, %d %b')
+    return Markup.escape(date.strftime('%A, %d %b'))
 
 
 @app.template_filter('url_for_char')
-def link_for_char(char_name):
+def url_for_char(char_name):
     char_name = '+'.join(name for name in char_name.split())
-    return f'https://www.tibia.com/community/?subtopic=characters&name={char_name}'
+    char_url = ('https://www.tibia.com/community/'
+                f'?subtopic=characters&name={char_name}')
+    return Markup.escape(char_url)
