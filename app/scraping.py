@@ -27,7 +27,7 @@ def parse_date(death_match):
     return datetime.datetime.strptime(date_str, '%b %d %Y, %H:%M:%S')
 
 
-def fetch(url):
+def fetch_page(url):
     response = requests.get(url)
     assert 'does not exist' not in response.text, url
     return response.text
@@ -53,10 +53,10 @@ def guild_members(html):
 
 def char_deaths(html):
     for death in find_deaths(html):
-        yield parse_date(death), death.group('level')
+        yield parse_date(death), int(death.group('level'))
 
 
-def fetch_all(guilds, min_level):
+def fetch_all(guilds, min_level, fetch=fetch_page):
     for guild_name in guilds:
         guild_page = fetch(guild_url(guild_name))
         for char_name, voc, level in guild_members(guild_page):
