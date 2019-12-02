@@ -48,17 +48,20 @@ def test_char_deaths(char_page):
     assert freire_deaths == list(deaths)
 
 
-'''
-def make_fetch(sequence=[]):
-    """Returns a function that yields a item of the sequence per call."""
-    htmls = iter(sequence)
-    return lambda url: next(htmls) 
+def fetch(pages=[]):
+    it = iter(pages)
+    def _fetch(url):
+        while True:
+            return next(it)
+    return _fetch
 
 
 def test_fetch_all(guild_page, char_page):
     guilds = ['Almight Os']
-    # fetch Almight Os guild page then fetch a character page
-    fetch = make_fetch(sequence=[guild_page, char_page])
-    deaths = list(fetch_all(guilds, min_level=300, fetch=fetch))
+    f = fetch([guild_page, char_page])
+    deaths = list(fetch_all(guilds, min_level=1100, fetch=f))
     assert 2 == len(deaths)
-'''
+    # ensures min_level filter is applied
+    f = fetch([guild_page, char_page])
+    deaths = list(fetch_all(guilds, min_level=1101, fetch=f))
+    assert 0 == len(deaths)
