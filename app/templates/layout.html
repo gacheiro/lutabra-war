@@ -10,7 +10,16 @@
   <title>Lutraba War</title>
 </head>
 <body>
-  {% block content %}
-  {% endblock %}
+  <div class="columns">
+    <div class="column is-3 is-hidden-mobile">
+      {% block sidebar %}
+      {% endblock %}
+    </div>
+    <div class="column is-6">
+      {% block content %}
+      {% endblock %}
+    </div>
+    <div class="column is-3">
+  </div>
 </body>
 </html>

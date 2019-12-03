@@ -20,10 +20,13 @@ def test_index(client, seed):
     assert b'has-text-left' in rv.data
     assert b'has-text-right' in rv.data
     for death in Death.query.all():
+        death_date = format_date(death.date)
         # ensure deaths are grouped by date
-        assert format_date(death.date).encode() in rv.data
-        # ensure links are present
+        assert death_date.encode() in rv.data
+        # ensure links to characters are present
         assert url_for_char(death.char_name).encode() in rv.data
+        # ensures sidebar (with links) is present
+        assert f'href="#{death_date}"'.encode() in rv.data
     # ensures deaths are sorted desc by date
     assert rv.data.find(b'Nattank Fazendo Historia') < rv.data.find(b'Rubini')
 

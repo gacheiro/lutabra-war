@@ -1,37 +1,39 @@
 {% extends 'layout.html' %}
+{% from '_sidebar.html' import render_sidebar %}
+
+{% block sidebar %}
+  {{ render_sidebar(deathdict.keys()) }}
+{% endblock %}
 
 {% block content %}
-  <div class="columns is-centered">
-    <div class="column is-half-desktop">
-      <div class="level">
-        <div class="level-left">
-          <div class="level-item">
-            <figure class="image is-64x64">
-              <img src="https://static.tibia.com/images/guildlogos/Almighty_Os.gif">
-            </figure>
-          </div>
-          <div class="level-item">
-            <p class="title">Almighty Os</p>
-          </div>
+  <div class="column is-paddingless">
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <figure class="image is-64x64">
+            <img src="https://static.tibia.com/images/guildlogos/Almighty_Os.gif">
+          </figure>
         </div>
-        <div class="level-right">
-          <div class="level-item">
-            <p class="title">Skeletin Alliance</p>
-          </div>
-          <div class="level-item">
-            <figure class="image is-64x64">
-              <img src="https://static.tibia.com/images/community/default_logo.gif">
-            </figure>
-          </div>
+        <div class="level-item">
+          <p class="title">Almighty Os</p>
+        </div>
+      </div>
+      <div class="level-right">
+        <div class="level-item">
+          <p class="title">Skeletin Alliance</p>
+        </div>
+        <div class="level-item">
+          <figure class="image is-64x64">
+            <img src="https://static.tibia.com/images/community/default_logo.gif">
+          </figure>
         </div>
       </div>
     </div>
   </div>
-  <section class="columns is-centered">
-    <div class="column is-half-desktop">
-    {% for date, deaths in deathlist %}
+  <section class="column">
+    {% for date, deaths in deathdict.items() %}
       <div class="tabs is-large">
-      <ul class>
+      <ul id="{{ date|format_date }}">
         <li class="is-active"><a>{{ date|format_date }}</a></li>
       </ul>
       </div>
@@ -41,7 +43,6 @@
       {% endfor %}
       </ul>
     {% endfor %}
-    </div>
   </section>
 {% endblock %}
 

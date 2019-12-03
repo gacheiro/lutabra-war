@@ -15,9 +15,11 @@ from app.scraping import fetch_all, char_url
 @app.route('/')
 def index():
     query = Death.query.order_by(Death.datetime.desc()).all()
-    # group deaths in the same day together
-    deathlist = groupby(query, lambda d: d.date)
-    return render_template('index.html', deathlist=deathlist)
+    # group deaths within the same day together
+    groups = groupby(query, lambda d: d.date)
+    # parse groups into a dict
+    deathdict = {date: list(deaths) for date, deaths in groups} 
+    return render_template('index.html', deathdict=deathdict)
 
 
 @app.cli.command('create-db')
