@@ -9,7 +9,7 @@ app.config.from_object(os.environ['APP_SETTINGS'])
 db = SQLAlchemy(app)
 
 from app.models import Death
-from app.scraping import fetch_all
+from app.scraping import fetch_all, char_url
 
 
 @app.route('/')
@@ -53,13 +53,13 @@ def drop_db():
 
 @app.template_filter('format_date')
 def format_date(date):
-    """Formats date as: Saturday, 30 Nov"""
+    """Formats date as in Saturday, 30 Nov."""
     return Markup.escape(date.strftime('%A, %d %b'))
 
 
 @app.template_filter('url_for_char')
 def url_for_char(char_name):
+    """Returns a url for the character's page."""
     char_name = '+'.join(name for name in char_name.split())
-    char_url = ('https://www.tibia.com/community/'
-                f'?subtopic=characters&name={char_name}')
-    return Markup.escape(char_url)
+    url = char_url(char_name)
+    return Markup.escape(url)

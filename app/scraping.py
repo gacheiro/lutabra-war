@@ -2,20 +2,44 @@ import re
 import datetime
 import requests
 
-TIBIA_COMMUNITY_URL = 'https://www.tibia.com/community/?subtopic=characters&name='
+TIBIA_COMMUNITY_URL = 'https://www.tibia.com/community/'
 
-guid_member_pattern = r'&name=(?P<char_name>[\w\+%\d]+)(.)+\s?<TD>(?P<vocation>[\w\s]+)</TD>\s?<TD>(?P<level>[\d]+)</TD>'
-death_pattern = r'top\">(?P<m>[\w]+)+&#160;(?P<d>\d{2})&#160;(?P<y>\d{4}),&#160;(?P<t>\d{2}:\d{2}:\d{2})&#160;CET(.*?)at Level\s(?P<level>[\d]+)'
+"""
+Guild member pattern. Finds members in guild page html. Ex:
+
+&name=Alice+Spectre">Alice&#160;Spectre</A></TD>
+<TD>Master Sorcerer</TD>
+<TD>288</TD>
+<TD>Dec&#160;28&#160;2018</TD>
+
+Please use https://regex101.com/ to test.
+"""
+guid_member_pattern = (r'&name=(?P<char_name>[\w\+%\d]+)'
+                       r'(.)+\s?<TD>'
+                       r'(?P<vocation>[\w\s]+)</TD>\s?<TD>'
+                       r'(?P<level>[\d]+)</TD>')
+
+
+"""
+Death pattern. Finds death entries in character page html. Ex:
+
+valign="top">Nov&#160;26&#160;2019,&#160;21:36:23&#160;CET</td>
+<td>Died at Level 1099 by an energetic book.<br />
+
+Please use https://regex101.com/ to test.
+"""
+death_pattern = (r'top">(?P<m>[\w]+)+&#160;(?P<d>\d{2})&#160;(?P<y>\d{4}),&#160;(?P<t>\d{2}:\d{2}:\d{2})&#160;CET(.*?)'
+                 r'at Level\s(?P<level>[\d]+)')
 
 
 def char_url(char_name):
     char_name = '+'.join(char_name.split())
-    return f'https://www.tibia.com/community/?subtopic=characters&name={char_name}'
+    return f'{TIBIA_COMMUNITY_URL}?subtopic=characters&name={char_name}'
 
 
 def guild_url(guild_name):
     guild_name = '+'.join(guild_name.split())
-    return f'https://www.tibia.com/community/?subtopic=guilds&page=view&GuildName={guild_name}'
+    return f'{TIBIA_COMMUNITY_URL}?subtopic=guilds&page=view&GuildName={guild_name}'
 
 
 def parse_date(death_match):
@@ -23,7 +47,7 @@ def parse_date(death_match):
                               death_match.group('d'),
                               death_match.group('y'),
                               death_match.group('t'))
-    date_str =f'{month} {day} {year}, {time}'
+    date_str = f'{month} {day} {year}, {time}'
     return datetime.datetime.strptime(date_str, '%b %d %Y, %H:%M:%S')
 
 
@@ -46,7 +70,7 @@ def find_deaths(html):
 def guild_members(html):
     for member in find_guild_members(html):
         # transforms First+Last in First Last
-        yield (' '.join(name for name in member.group('char_name').split('+')),
+        yield (' '.join(member.group('char_name').split('+')),
                member.group('vocation'),
                int(member.group('level')))
 

@@ -2,12 +2,16 @@ import os
 import datetime
 import pytest
 
+# app is created at import time, so we need to
+# define the env here before any module imports it
+os.environ['FLASK_ENV'] = 'test'
+os.environ['APP_SETTINGS'] = 'config.TestingConfig'
+
 
 @pytest.fixture
 def client():
-    os.environ['FLASK_ENV'] = 'test'
-    os.environ['APP_SETTINGS'] = 'config.DevelopmentConfig'
     from app import app, db
+    assert 'sqlite:///:memory:' == app.config['SQLALCHEMY_DATABASE_URI']
     with app.test_client() as client:
         with app.app_context():
             db.create_all()
