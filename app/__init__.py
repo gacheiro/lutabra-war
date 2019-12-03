@@ -33,6 +33,7 @@ def update_db():
     # repopulates the db with new death records
     guilds = (app.config['GUILD_A'], app.config['GUILD_B'])
     min_level = app.config['MINIMUN_LEVEL']
+    print(f"Fetching deaths of players level {min_level}+")
     for death in fetch_all(guilds, min_level):
         if app.config['DEBUG']:
             print(death)

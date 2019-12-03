@@ -10,7 +10,7 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     GUILD_A = 'Almighty Os'
     GUILD_B = 'Skeletin Alliance'
-    MINIMUN_LEVEL = 400
+    MINIMUN_LEVEL = int(os.environ.get('MINIMUN_LEVEL', 400))
 
 
 class DevelopmentConfig(Config):
