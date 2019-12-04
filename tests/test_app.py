@@ -1,6 +1,6 @@
 import os
 import datetime
-from app import format_date, url_for_char
+from app import app, format_date, url_for_char, death_count
 from app.models import Death
 
 
@@ -36,3 +36,15 @@ def test_url_for_char():
                 '?subtopic=characters&amp;name=Nattank+Fazendo+Historia')
     assert expected == url_for_char('Nattank Fazendo Historia')
     assert expected == url_for_char('Nattank+Fazendo+Historia')
+
+
+def test_death_score():
+    guild_a, guild_b = app.config['GUILD_A'], app.config['GUILD_B']
+    deaths = [
+        Death(guild=guild_a),
+        Death(guild=guild_a),
+        Death(guild=guild_a),
+        Death(guild=guild_b),
+        Death(guild=guild_b),
+    ]
+    assert (3, 2) == death_count(deaths)

@@ -1,11 +1,15 @@
 
 .deathlist {
-    margin-top: 25px;
+    margin-top: 40px;
 }
 
 .sidebar {
     margin-top: 50px;
     padding-left: 50%;
+}
+
+.section {
+    padding: 20px auto;
 }
 
 body {

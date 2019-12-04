@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-  <div class="column is-paddingless">
+  <section>
     <div class="level">
       <div class="level-left">
         <div class="level-item">
@@ -29,19 +29,29 @@
         </div>
       </div>
     </div>
-  </div>
-  <section class="column">
+  </section>
+  <section>
     {% for date, deaths in deathdict.items() %}
-      <div class="tabs is-large">
-      <ul id="{{ date|format_date }}">
-        <li class="is-active"><a>{{ date|format_date }}</a></li>
-      </ul>
+    <div class="deathlist">
+      <div id="{{ date|format_date }}" class="level is-mobile">
+        <div class="level-left">
+          <span class="level-item subtitle is-3">
+            {{ date|format_date }}
+          </span>
+        </div>
+        <div class="level-right">
+          <span class="level-item subtitle">
+            {{ render_score(deaths) }}
+          </span>
+        </div>
       </div>
+      <hr>
       <ul class="deathlist">
       {% for death in deaths %}
         {{ render_death(death) }}
       {% endfor %}
       </ul>
+    </div>
     {% endfor %}
   </section>
 {% endblock %}
@@ -64,3 +74,8 @@
   {% endif -%}
   </li>
 {%- endmacro %}
+
+{% macro render_score(deaths) %}
+  {% set deaths_a, deaths_b = deaths|death_count %}
+  <span>Death score: {{ deaths_b }} x {{ deaths_a }}</span>
+{% endmacro %}

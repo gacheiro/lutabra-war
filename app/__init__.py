@@ -66,3 +66,16 @@ def url_for_char(char_name):
     char_name = '+'.join(name for name in char_name.split())
     url = char_url(char_name)
     return Markup.escape(url)
+
+
+@app.template_filter('death_count')
+def death_count(deaths):
+    import pprint
+    """Returns death count by each guild."""
+    deaths_a, deaths_b = 0, 0
+    for death in deaths:
+        if death.guild == app.config['GUILD_A']:
+            deaths_a += 1
+        else:
+            deaths_b += 1
+    return deaths_a, deaths_b
