@@ -1,8 +1,11 @@
 {% extends 'layout.html' %}
 {% from '_sidebar.html' import render_sidebar %}
 
+{# group deaths within the same day together #}
+{% set deathgroups = deathlist|grouped_by('date') %}
+
 {% block sidebar %}
-  {{ render_sidebar(deathdict.keys()) }}
+  {{ render_sidebar(deathgroups.keys()) }}
 {% endblock %}
 
 {% block content %}
@@ -31,7 +34,7 @@
     </div>
   </section>
   <section>
-    {% for date, deaths in deathdict.items() %}
+    {% for date, deathlist in deathgroups.items() %}
     <div class="deathlist">
       <div id="{{ date|format_date }}" class="level is-mobile">
         <div class="level-left">
@@ -41,13 +44,13 @@
         </div>
         <div class="level-right">
           <span class="level-item subtitle">
-            {{ render_score(deaths) }}
+            {{ render_score(deathslist) }}
           </span>
         </div>
       </div>
       <hr>
       <ul class="deathlist">
-      {% for death in deaths %}
+      {% for death in deathlist %}
         {{ render_death(death) }}
       {% endfor %}
       </ul>

@@ -10,7 +10,7 @@ os.environ['APP_SETTINGS'] = 'config.TestingConfig'
 
 @pytest.fixture
 def client():
-    from app import app, db
+    from lutabrawar import app, db
     assert 'sqlite:///:memory:' == app.config['SQLALCHEMY_DATABASE_URI']
     with app.test_client() as client:
         with app.app_context():
@@ -21,7 +21,7 @@ def client():
 
 @pytest.fixture
 def seed(client):
-    from app.models import db, Death
+    from lutabrawar.models import db, Death
     deaths = [
         {
             'char_name': 'Rubini',
