@@ -1,2 +1,2 @@
-web: gunicorn lutabra.wsgi
+web: gunicorn lutabrawar.wsgi
 release: flask create-db
