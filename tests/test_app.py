@@ -1,12 +1,9 @@
 import os
 import datetime
-from app import app, format_date, url_for_char, death_count
-from app.models import Death
 
-
-def test_format_date():
-    dt = datetime.datetime(2019, 12, 1, 10, 0, 0)
-    assert 'Sunday, 01 Dec' == format_date(dt)
+from lutabrawar import app
+from lutabrawar.models import Death
+from lutabrawar.filters import format_date, url_for_char
 
 
 def test_index(client, seed):
@@ -29,22 +26,3 @@ def test_index(client, seed):
         assert f'href="#{death_date}"'.encode() in rv.data
     # ensures deaths are sorted desc by date
     assert rv.data.find(b'Nattank Fazendo Historia') < rv.data.find(b'Rubini')
-
-
-def test_url_for_char():
-    expected = ('https://www.tibia.com/community/'
-                '?subtopic=characters&amp;name=Nattank+Fazendo+Historia')
-    assert expected == url_for_char('Nattank Fazendo Historia')
-    assert expected == url_for_char('Nattank+Fazendo+Historia')
-
-
-def test_death_score():
-    guild_a, guild_b = app.config['GUILD_A'], app.config['GUILD_B']
-    deaths = [
-        Death(guild=guild_a),
-        Death(guild=guild_a),
-        Death(guild=guild_a),
-        Death(guild=guild_b),
-        Death(guild=guild_b),
-    ]
-    assert (3, 2) == death_count(deaths)

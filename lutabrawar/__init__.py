@@ -8,18 +8,15 @@ app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 db = SQLAlchemy(app)
 
-from app.models import Death
-from app.scraping import fetch_all, char_url
+from lutabrawar.models import Death
+from lutabrawar.scraping import fetch_all
+from lutabrawar.filters import grouped_by
 
 
 @app.route('/')
 def index():
     query = Death.query.order_by(Death.datetime.desc()).all()
-    # group deaths within the same day together
-    groups = groupby(query, lambda d: d.date)
-    # parse groups into a dict
-    deathdict = {date: list(deaths) for date, deaths in groups} 
-    return render_template('index.html', deathdict=deathdict)
+    return render_template('index.html', deathlist=query)
 
 
 @app.cli.command('create-db')
@@ -52,30 +49,3 @@ def stats_db():
 @app.cli.command('drop-db')
 def drop_db():
     db.drop_all()
-
-
-@app.template_filter('format_date')
-def format_date(date):
-    """Formats date as in Saturday, 30 Nov."""
-    return Markup.escape(date.strftime('%A, %d %b'))
-
-
-@app.template_filter('url_for_char')
-def url_for_char(char_name):
-    """Returns a url for the character's page."""
-    char_name = '+'.join(name for name in char_name.split())
-    url = char_url(char_name)
-    return Markup.escape(url)
-
-
-@app.template_filter('death_count')
-def death_count(deaths):
-    import pprint
-    """Returns death count by each guild."""
-    deaths_a, deaths_b = 0, 0
-    for death in deaths:
-        if death.guild == app.config['GUILD_A']:
-            deaths_a += 1
-        else:
-            deaths_b += 1
-    return deaths_a, deaths_b

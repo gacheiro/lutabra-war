@@ -1,6 +1,6 @@
 import datetime
 import pytest
-from app.scraping import guild_members, char_deaths, fetch_all
+from lutabrawar.scraping import guild_members, char_deaths, fetch_all
 
 # list of guild members in '_fixtures/guild.html'
 os_members = [

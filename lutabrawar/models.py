@@ -1,4 +1,4 @@
-from app import db
+from lutabrawar import db
 
 
 class Death(db.Model):
