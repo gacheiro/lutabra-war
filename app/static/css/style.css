@@ -1,17 +1,13 @@
 
+.container {
+    padding: 32px;
+    margin-top: 50px;
+}
+
 .deathlist {
     margin-top: 40px;
 }
 
 .sidebar {
-    margin-top: 50px;
-    padding-left: 50%;
-}
-
-.section {
-    padding: 20px auto;
-}
-
-body {
     margin-top: 50px;
 }
