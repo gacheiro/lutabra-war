@@ -11,7 +11,6 @@ def test_index(client, seed):
     assert 200 == rv.status_code
     assert b'Rubini' in rv.data
     assert b'Nattank Fazendo Historia' in rv.data
-    assert rv.data.count(b'Elite Knight') == 2
     # ensure deaths are align left (Almighty Os)
     # and right (Skeletin Alliance)
     assert b'has-text-left' in rv.data

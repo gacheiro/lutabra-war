@@ -39,10 +39,10 @@ def test_death_score(deaths):
 
 def test_groupedby(deaths):
     A, B = app.config['GUILD_A'], app.config['GUILD_B']
-    expected = {
-        B: [deaths[0]],
-        A: deaths[1:4],
-        B: deaths[4:6],
-        A: [deaths[6]],
-    }
+    expected = [
+        (B, [deaths[0]]),
+        (A, deaths[1:4]),
+        (B, deaths[4:6]),
+        (A, [deaths[6]]),
+    ]
     assert expected == grouped_by(deaths, 'guild')

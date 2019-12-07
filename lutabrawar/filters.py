@@ -35,6 +35,6 @@ def death_count(deaths):
 def grouped_by(items, attr):
     """Groups successives items with the same attr together."""
     groups = groupby(items, lambda x: getattr(x, attr))
-    # parse the result into a dictionary, so it can be
-    # iterated more than once
-    return {key: list(value) for key, value in groups}
+    # parse the result into a list of tuples (grouper, grouped items),
+    # so it can be iterated more than once
+    return [(grouper, list(items)) for grouper, items in groups]
