@@ -1,10 +1,10 @@
-{% macro render_sidebar(dates) -%}
+{% macro render_sidebar(deathgroups) -%}
   <div class="menu sidebar">
     <p class="menu-label">
       Deaths by date
     </p>
     <ul>
-    {% for date in dates %}
+    {% for date, _ in deathgroups %}
       <li>
         {% set date_item = date|format_date %}
         <a href="#{{ date_item }}"> {{ date_item }} </a>

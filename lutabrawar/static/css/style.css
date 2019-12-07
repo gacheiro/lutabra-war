@@ -11,3 +11,19 @@
 .sidebar {
     margin-top: 50px;
 }
+
+li.deathitem {
+    padding: 10px;
+}
+
+li.left {
+    border-left: solid;
+    border-width: thin;
+    border-color: blue;
+}
+
+li.right {
+    border-right: solid;
+    border-width: thin;
+    border-color: red;
+}
