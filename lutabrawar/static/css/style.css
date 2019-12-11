@@ -4,26 +4,39 @@
     margin-top: 50px;
 }
 
-.deathlist {
-    margin-top: 40px;
-}
-
 .sidebar {
     margin-top: 50px;
 }
 
+/* death list */
+
+.deathlist-container {
+    font-family: Verdana, Arial, Times New Roman, sans-serif;
+}
+
+.deathlist-header {
+    background-color:#505050;
+    color:#fff;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.deathlist {
+    margin-top: 40px;
+}
+
 li.deathitem {
-    padding: 10px;
+    padding: 5px;
 }
 
-li.left {
-    border-left: solid;
-    border-width: thin;
-    border-color: blue;
+.even {
+    background-color: #F1E0C6;
 }
 
-li.right {
-    border-right: solid;
-    border-width: thin;
-    border-color: red;
+.odd {
+    background-color: #D4C0A1;
+}
+
+a {
+    color: #004294;
 }

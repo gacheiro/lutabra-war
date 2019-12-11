@@ -25,3 +25,10 @@ def test_index(client, seed):
         assert f'href="#{death_date}"'.encode() in rv.data
     # ensures deaths are sorted desc by date
     assert rv.data.find(b'Nattank Fazendo Historia') < rv.data.find(b'Rubini')
+
+
+def test_guild_names_on_index(client, config):
+    # ensures guild names show up on page
+    rv = client.get('/')
+    assert config['GUILD_A'].encode() in rv.data
+    assert config['GUILD_B'].encode() in rv.data

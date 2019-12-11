@@ -20,6 +20,12 @@ def client():
 
 
 @pytest.fixture
+def config():
+    from lutabrawar import app
+    return app.config
+    
+
+@pytest.fixture
 def seed(client):
     from lutabrawar.models import db, Death
     deaths = [

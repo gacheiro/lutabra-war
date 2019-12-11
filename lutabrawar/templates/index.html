@@ -18,12 +18,12 @@
           </figure>
         </div>
         <div class="level-item">
-          <p class="title">Almighty Os</p>
+          <p class="title">{{ config['GUILD_A'] }}</p>
         </div>
       </div>
       <div class="level-right">
         <div class="level-item">
-          <p class="title">Skeletin Alliance</p>
+          <p class="title">{{ config['GUILD_B'] }}</p>
         </div>
         <div class="level-item">
           <figure class="image is-64x64">
@@ -48,7 +48,6 @@
           </span>
         </div>
       </div>
-      <hr>
       <div>
         {{ render_deathlist(deathlist) }}
       </div>
@@ -58,31 +57,34 @@
 {% endblock %}
 
 {% macro render_deathlist(deathlist) -%}
-  <ul>
-    {% for guild, deaths in deathlist|grouped_by('guild') %}
-      {% if guild == config['GUILD_A'] %}
-        {% set align, color = 'left', 'info' %}
-      {% else %}
-        {% set align, color = 'right', 'danger' %}
-      {% endif %}      
-      <li class="{{ align }} deathitem has-text-{{ align }}">
-        {% for death in deaths %}
-          {{ _render_death(death, color) }}
-        {% endfor %}
-      </li>
-    {% endfor %}
-  </ul>
+  {% set color_class = cycler('odd', 'even')%}
+  <div class="deathlist-container">
+    <div class="deathlist-header">
+      Character Deaths
+    </div>
+    <ul>
+      {% for guild, deaths in deathlist|grouped_by('guild') %}
+        {% if guild == config['GUILD_A'] %}
+          {% set align, color = 'left', 'info' %}
+        {% else %}
+          {% set align, color = 'right', 'danger' %}
+        {% endif %}      
+        <li class="{{ align }} deathitem has-text-{{ align }} {{ color_class.next() }}">
+          {% for death in deaths %}
+            {{ _render_death(death, loop.last) }}
+          {% endfor %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
 {%- endmacro %}
 
-{% macro _render_death(death, color) -%}
-  <span class="tag is-{{ color }} is-light is-medium">
-    <a href={{ death.char_name|url_for_char }} target="_blank">
-      <span class="tag is-rounded is-{{color}} is-light">
-        {{ death.level }}
-      </span>
-      {{ death.char_name }}
-    </a>
-  </span>
+{% macro _render_death(death, is_last) -%}
+<a href={{ death.char_name|url_for_char }} target="_blank">
+    <strong>
+      [{{ death.level }}]&nbsp;{{ death.char_name }}{% if not is_last -%}{{', '}}{%- endif %}
+    </strong>
+  </a>
 {%- endmacro %}
 
 {% macro render_score(deaths) %}
