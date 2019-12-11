@@ -70,7 +70,8 @@ def find_deaths(html):
 def guild_members(html):
     for member in find_guild_members(html):
         # transforms First+Last in First Last
-        yield (' '.join(member.group('char_name').split('+')),
+        char_name = ' '.join(member.group('char_name').split('+'))
+        yield (char_name.replace('%27', "'"),
                member.group('vocation'),
                int(member.group('level')))
 

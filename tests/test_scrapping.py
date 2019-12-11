@@ -12,8 +12,8 @@ os_members = [
     ('Balothh', 'Master Sorcerer', 704),
     ('Diego Barral', 'Elder Druid', 381),
     # %27 is the character '
-    ("Fen%27yx", 'Master Sorcerer', 502),
-    ("Geniuz Under%27ground", 'Elite Knight', 407),
+    ("Fen'yx", 'Master Sorcerer', 502),
+    ("Geniuz Under'ground", 'Elite Knight', 407),
     ('Canneta Azull', 'Master Sorcerer', 21),  
     ('Lutabra Defenderr', 'Paladin', 8),
 ]

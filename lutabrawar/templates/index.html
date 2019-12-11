@@ -82,7 +82,7 @@
 {% macro _render_death(death, is_last) -%}
 <a href={{ death.char_name|url_for_char }} target="_blank">
     <strong>
-      [{{ death.level }}]&nbsp;{{ death.char_name }}{% if not is_last -%}{{', '}}{%- endif %}
+      [{{ death.level }}]&nbsp;{{ death.char_name|e }}{% if not is_last -%}{{', '}}{%- endif %}
     </strong>
   </a>
 {%- endmacro %}
