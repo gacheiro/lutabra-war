@@ -3,8 +3,11 @@ import pytest
 
 from lutabrawar import app
 from lutabrawar.models import Death
-from lutabrawar.filters import (format_date, url_for_char, 
-    death_count, grouped_by)
+from lutabrawar.filters import (format_date,
+                                url_for_char,
+                                link_to_char, 
+                                death_count,
+                                grouped_by)
 
 
 @pytest.fixture
@@ -31,6 +34,18 @@ def test_url_for_char():
                 '?subtopic=characters&amp;name=Nattank+Fazendo+Historia')
     assert expected == url_for_char('Nattank Fazendo Historia')
     assert expected == url_for_char('Nattank+Fazendo+Historia')
+
+
+def test_link_to_char():
+    death = Death(char_name='Rubini', level=752)
+    expected = (
+        '<strong>'
+        '<a href=https://www.tibia.com/community/?subtopic=characters&amp;name=Rubini target="_blank">'
+        '[752] Rubini'
+        '</a>'
+        '</strong>'
+    )
+    assert expected == link_to_char(death)
 
 
 def test_death_score(deaths):

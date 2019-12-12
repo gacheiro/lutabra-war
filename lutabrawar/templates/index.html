@@ -65,26 +65,18 @@
     <ul>
       {% for guild, deaths in deathlist|grouped_by('guild') %}
         {% if guild == config['GUILD_A'] %}
-          {% set align, color = 'left', 'info' %}
+          {% set align = 'left' %}
         {% else %}
-          {% set align, color = 'right', 'danger' %}
+          {% set align = 'right' %}
         {% endif %}      
         <li class="{{ align }} deathitem has-text-{{ align }} {{ color_class.next() }}">
-          {% for death in deaths %}
-            {{ _render_death(death, loop.last) }}
-          {% endfor %}
+          {# this renders the level and names as a list of links joined by commas #}
+          {# ex: [752] Rubini, [751] Gordini, ... #}
+          {{ deaths|map('link_to_char')|join(', ') }}
         </li>
       {% endfor %}
     </ul>
   </div>
-{%- endmacro %}
-
-{% macro _render_death(death, is_last) -%}
-<a href={{ death.char_name|url_for_char }} target="_blank">
-    <strong>
-      [{{ death.level }}]&nbsp;{{ death.char_name|e }}{% if not is_last -%}{{', '}}{%- endif %}
-    </strong>
-  </a>
 {%- endmacro %}
 
 {% macro render_score(deaths) %}

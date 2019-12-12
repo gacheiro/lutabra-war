@@ -3,7 +3,7 @@ import datetime
 
 from lutabrawar import app
 from lutabrawar.models import Death
-from lutabrawar.filters import format_date, url_for_char
+from lutabrawar.filters import format_date, link_to_char
 
 
 def test_index(client, seed):
@@ -20,7 +20,7 @@ def test_index(client, seed):
         # ensure deaths are grouped by date
         assert death_date.encode() in rv.data
         # ensure links to characters are present
-        assert url_for_char(death.char_name).encode() in rv.data
+        assert link_to_char(death).encode() in rv.data
         # ensures sidebar (with links) is present
         assert f'href="#{death_date}"'.encode() in rv.data
     # ensures deaths are sorted desc by date
