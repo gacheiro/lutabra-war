@@ -1,6 +1,6 @@
 import os
 from itertools import groupby
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from jinja2 import Markup
 
@@ -11,6 +11,14 @@ db = SQLAlchemy(app)
 from lutabrawar.models import Death
 from lutabrawar.scraping import fetch_all
 from lutabrawar.filters import grouped_by
+
+
+@app.before_request
+def before_request():
+    """Forces https requests on production."""
+    if not request.is_secure and app.env == 'production':
+        url = request.url.replace("http://", "https://", 1)
+        return redirect(url, code=301)
 
 
 @app.route('/')
