@@ -13,8 +13,8 @@
     <div class="level">
       <div class="level-left">
         <div class="level-item">
-          <figure class="image is-64x64">
-            <img src="https://static.tibia.com/images/guildlogos/Almighty_Os.gif">
+          <figure class="image is-128x128">
+            <img src="{{ url_for('static', filename='images/os-logo-128x128.png') }}">
           </figure>
         </div>
         <div class="level-item">
@@ -26,8 +26,8 @@
           <p class="title">{{ config['GUILD_B'] }}</p>
         </div>
         <div class="level-item">
-          <figure class="image is-64x64">
-            <img src="https://static.tibia.com/images/community/default_logo.gif">
+          <figure class="image is-128x128">
+            <img src="{{ url_for('static', filename='images/alliance-logo-128x128.png') }}">
           </figure>
         </div>
       </div>
