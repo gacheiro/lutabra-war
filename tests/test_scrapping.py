@@ -16,6 +16,7 @@ os_members = [
     ("Geniuz Under'ground", 'Elite Knight', 407),
     ('Canneta Azull', 'Master Sorcerer', 21),  
     ('Lutabra Defenderr', 'Paladin', 8),
+    ('Noop-knight', 'Knight', 258),
 ]
 
 # list of deaths in '_fixtures/char.html'

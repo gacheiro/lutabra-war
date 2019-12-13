@@ -14,11 +14,10 @@ Guild member pattern. Finds members in guild page html. Ex:
 
 Please use https://regex101.com/ to test.
 """
-guid_member_pattern = (r'&name=(?P<char_name>[\w\+%\d]+)'
+guid_member_pattern = (r'&name=(?P<char_name>[\w\+%\d-]+)'
                        r'(.)+\s?<TD>'
                        r'(?P<vocation>[\w\s]+)</TD>\s?<TD>'
                        r'(?P<level>[\d]+)</TD>')
-
 
 """
 Death pattern. Finds death entries in character page html. Ex:
