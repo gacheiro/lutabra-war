@@ -1,3 +1,4 @@
+import contextlib
 import datetime
 import pytest
 from lutabrawar.scraping import guild_members, char_deaths, fetch_all
@@ -14,7 +15,7 @@ os_members = [
     # %27 is the character '
     ("Fen'yx", 'Master Sorcerer', 502),
     ("Geniuz Under'ground", 'Elite Knight', 407),
-    ('Canneta Azull', 'Master Sorcerer', 21),  
+    ('Canneta Azull', 'Master Sorcerer', 21),
     ('Lutabra Defenderr', 'Paladin', 8),
     ('Noop-knight', 'Knight', 258),
 ]
@@ -49,20 +50,30 @@ def test_char_deaths(char_page):
     assert freire_deaths == list(deaths)
 
 
-def fetch(pages=[]):
-    it = iter(pages)
-    def _fetch(url):
-        while True:
-            return next(it)
-    return _fetch
+@contextlib.contextmanager
+def monkeypatch_fetch(guild_page, char_page):
+    """Monkeypatches lutabra.scraping.fetch async function."""
+
+    async def f(session, url):
+        if url.endswith('Almighty+Os'):
+            return guild_page
+        elif url.endswith('Freire+Lutabra+Defender'):
+            return char_page
+        raise ValueError
+
+    import lutabrawar.scraping
+    _fetch = lutabrawar.scraping.fetch
+    lutabrawar.scraping.fetch = f
+    yield
+    lutabrawar.scraping.fetch = _fetch
 
 
 def test_fetch_all(guild_page, char_page):
-    guilds = ['Almight Os']
-    f = fetch([guild_page, char_page])
-    deaths = list(fetch_all(guilds, min_level=1100, fetch=f))
+    guilds = ['Almighty Os']
+    with monkeypatch_fetch(guild_page, char_page):
+        deaths = list(fetch_all(guilds, min_level=1100))
     assert 2 == len(deaths)
     # ensures min_level filter is applied
-    f = fetch([guild_page, char_page])
-    deaths = list(fetch_all(guilds, min_level=1101, fetch=f))
+    with monkeypatch_fetch(guild_page, char_page):
+        deaths = list(fetch_all(guilds, min_level=1101))
     assert 0 == len(deaths)
