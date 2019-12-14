@@ -1,6 +1,7 @@
+import asyncio
 import re
 import datetime
-import requests
+import aiohttp
 
 TIBIA_COMMUNITY_URL = 'https://www.tibia.com/community/'
 
@@ -32,16 +33,18 @@ death_pattern = re.compile(death)
 
 
 def char_url(char_name):
+    """Returns an url to the character's profile on tibia community."""
     char_name = '+'.join(char_name.split())
     return f'{TIBIA_COMMUNITY_URL}?subtopic=characters&name={char_name}'
 
 
 def guild_url(guild_name):
+    """Returns an url to the guild page on tibia community."""
     guild_name = '+'.join(guild_name.split())
     return f'{TIBIA_COMMUNITY_URL}?subtopic=guilds&page=view&GuildName={guild_name}'
 
 
-def parse_date(death_match):
+def _parse_date(death_match):
     month, day, year, time = (death_match.group('m'),
                               death_match.group('d'),
                               death_match.group('y'),
@@ -50,24 +53,20 @@ def parse_date(death_match):
     return datetime.datetime.strptime(date_str, '%b %d %Y, %H:%M:%S')
 
 
-def fetch_page(url):
-    response = requests.get(url)
-    assert 'does not exist' not in response.text, url
-    return response.text
-
-
-def find_guild_members(html):
+def _find_guild_members(html):
     for member in guild_member_pattern.finditer(html):
         yield member
 
 
-def find_deaths(html):
+def _find_deaths(html):
     for death in death_pattern.finditer(html):
         yield death
 
 
 def guild_members(html):
-    for member in find_guild_members(html):
+    """Parses and yields guild members (char name, vocation, level) in
+    the guild page."""
+    for member in _find_guild_members(html):
         # transforms First+Last in First Last
         char_name = ' '.join(member.group('char_name').split('+'))
         yield (char_name.replace('%27', "'"),
@@ -76,22 +75,54 @@ def guild_members(html):
 
 
 def char_deaths(html):
-    for death in find_deaths(html):
-        yield parse_date(death), int(death.group('level'))
+    """Parses and yields death entries in the character's page."""
+    for death in _find_deaths(html):
+        yield _parse_date(death), int(death.group('level'))
 
 
-def fetch_all(guilds, min_level, fetch=fetch_page):
-    for guild_name in guilds:
-        guild_page = fetch(guild_url(guild_name))
-        for char_name, voc, level in guild_members(guild_page):
-            if level < min_level:
-                continue
-            char_page = fetch(char_url(char_name))
-            for date, level in char_deaths(char_page):
-                yield {
-                        'char_name': char_name,
+async def fetch(session, url):
+    async with session.get(url) as response:
+        assert 200 == response.status, response.status
+        return await response.text()
+
+
+async def _fetch_all(guilds, min_level, timeout=1200, limit=10):
+    conn = aiohttp.TCPConnector(limit_per_host=limit)
+    _timeout = aiohttp.ClientTimeout(total=timeout)
+    async with aiohttp.ClientSession(connector=conn, timeout=_timeout) as session:
+
+        guild_urls = [guild_url(guild) for guild in guilds]
+        guild_pages = await asyncio.gather(
+            *(fetch(session, url) for url in guild_urls)
+        )
+
+        # go through guild pages -> character pages
+        # and store all deaths in a list
+        deaths = []
+        for guild_name, guild_page in zip(guilds, guild_pages):
+            # select characters level greater than minimun level filter
+            chars = []
+            for char_name, voc, level in guild_members(guild_page):
+                if level >= min_level:
+                    chars.append((char_name, voc, level))
+
+            # fetch the characters pages
+            char_pages = await asyncio.gather(
+                *(fetch(session, char_url(char[0])) for char in chars)
+            )
+
+            # parse death entries in character page
+            for char, char_page in zip(chars, char_pages):
+                for date, level in char_deaths(char_page):
+                    deaths.append({
+                        'char_name': char[0],
                         'level': level,
-                        'vocation': voc,
+                        'vocation': char[1],
                         'datetime': date,
                         'guild': guild_name,
-                    }
+                    })
+        return deaths
+
+
+def fetch_all(guilds, min_level):
+    return asyncio.run(_fetch_all(guilds, min_level))
