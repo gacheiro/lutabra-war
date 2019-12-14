@@ -10,14 +10,13 @@ Guild member pattern. Finds members in guild page html. Ex:
 &name=Alice+Spectre">Alice&#160;Spectre</A></TD>
 <TD>Master Sorcerer</TD>
 <TD>288</TD>
-<TD>Dec&#160;28&#160;2018</TD>
 
 Please use https://regex101.com/ to test.
 """
-guid_member_pattern = (r'&name=(?P<char_name>[\w\+%\d-]+)'
-                       r'(.)+\s?<TD>'
-                       r'(?P<vocation>[\w\s]+)</TD>\s?<TD>'
-                       r'(?P<level>[\d]+)</TD>')
+guild_member = (r'&name=(?P<char_name>[\w\+%\d-]+)(.)+\s?'
+                r'<TD>(?P<vocation>[\w\s]+)</TD>\s?'
+                r'<TD>(?P<level>[\d]+)</TD>')
+guild_member_pattern = re.compile(guild_member)
 
 """
 Death pattern. Finds death entries in character page html. Ex:
@@ -27,8 +26,9 @@ valign="top">Nov&#160;26&#160;2019,&#160;21:36:23&#160;CET</td>
 
 Please use https://regex101.com/ to test.
 """
-death_pattern = (r'top">(?P<m>[\w]+)+&#160;(?P<d>\d{2})&#160;(?P<y>\d{4}),&#160;(?P<t>\d{2}:\d{2}:\d{2})&#160;CET(.*?)'
-                 r'at Level\s(?P<level>[\d]+)')
+death = (r'top">(?P<m>[\w]+)+&#160;(?P<d>\d{2})&#160;(?P<y>\d{4}),&#160;(?P<t>\d{2}:\d{2}:\d{2})&#160;CET(.*?)'
+         r'at Level\s(?P<level>[\d]+)')
+death_pattern = re.compile(death)
 
 
 def char_url(char_name):
@@ -57,13 +57,13 @@ def fetch_page(url):
 
 
 def find_guild_members(html):
-    for m in re.finditer(guid_member_pattern, html):
-        yield m
+    for member in guild_member_pattern.finditer(html):
+        yield member
 
 
 def find_deaths(html):
-    for m in re.finditer(death_pattern, html):
-        yield m
+    for death in death_pattern.finditer(html):
+        yield death
 
 
 def guild_members(html):

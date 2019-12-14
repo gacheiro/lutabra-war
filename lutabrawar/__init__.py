@@ -1,4 +1,5 @@
 import os
+import datetime
 from itertools import groupby
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
@@ -34,6 +35,7 @@ def create_db():
 
 @app.cli.command('update-db')
 def update_db():
+    start = datetime.datetime.now()
     print('Update start.')
     # deletes all death records
     db.session.query(Death).delete()
@@ -46,7 +48,8 @@ def update_db():
             print(death)
         db.session.add(Death(**death))
     db.session.commit()
-    print('Update done.')
+    print('Update complete.')
+    print(f'Update duration: {datetime.datetime.now() - start}')
 
 
 @app.cli.command('stats-db')
