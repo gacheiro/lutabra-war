@@ -11,7 +11,7 @@ class Config(object):
     SECRET_KEY = 'this-really-needs-to-be-changed'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///../app.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    GUILD_A = 'Almighty Os'
+    GUILD_A = 'Almighty'
     GUILD_B = 'Skeletin Alliance'
     MINIMUN_LEVEL = int(os.environ.get('MINIMUN_LEVEL', 400))
 

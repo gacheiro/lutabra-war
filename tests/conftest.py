@@ -33,7 +33,7 @@ def seed(client):
             'char_name': 'Rubini',
             'level': 752,
             'vocation': 'Elite Knight',
-            'guild': 'Almighty Os',
+            'guild': 'Almighty',
             'datetime': datetime.datetime(2019, 12, 1, 10, 0, 0),
         },
         {
